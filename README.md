@@ -2,6 +2,8 @@
 
 Modern OCR web application powered by DeepSeek-OCR with a stunning React frontend and FastAPI backend.
 
+![DeepSeek OCR in Action](assets/multi-bird.png)
+
 > **Recent Updates (v2.1.1)**
 > - ✅ Fixed image removal button - now properly clears and allows re-upload
 > - ✅ Fixed multiple bounding boxes parsing - handles `[[x1,y1,x2,y2], [x1,y1,x2,y2]]` format
@@ -285,6 +287,19 @@ For large images, the model uses dynamic cropping:
 - Coordinates are in [x1, y1, x2, y2] format (top-left, bottom-right)
 - **Supports multiple boxes**: When finding multiple instances, format is `[[x1,y1,x2,y2], [x1,y1,x2,y2], ...]`
 - Frontend automatically displays all boxes overlaid on the image with unique colors
+
+## Examples
+
+Here are some example images showcasing different OCR capabilities:
+
+### Visual Understanding
+![Helmet Description](assets/helmet.png)
+
+### Table Extraction from Chart
+![Chart to Table](assets/table_from_chart.png)
+
+### Image Description
+![Describe Mode](assets/describe.png)
 
 ## Troubleshooting
 
