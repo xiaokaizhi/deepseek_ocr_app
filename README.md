@@ -134,9 +134,9 @@ docker compose up --build
 
 ### Hardware
 - NVIDIA GPU with CUDA support
-  - Recommended: RTX 3090, RTX 4090, RTX 5090, or newer
+  - Recommended: RTX 3090, RTX 4090, RTX 5090, or better
   - Minimum: 8-12GB VRAM for the model
-  - More VRAM allows for larger batch sizes and higher resolution images
+  - More VRAM always good!
 
 ### Software
 - **Docker & Docker Compose** (latest version recommended)
