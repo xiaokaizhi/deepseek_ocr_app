@@ -38,7 +38,7 @@ Then open:
 - **Backend**: FastAPI + PyTorch + Transformers 4.46 + DeepSeek-OCR
 - **Server**: Nginx (reverse proxy)
 - **Container**: Docker + Docker Compose with multi-stage builds
-- **GPU**: NVIDIA CUDA support (tested on RTX 3090)
+- **GPU**: NVIDIA CUDA support (tested on RTX 5090)
 
 ## Project Structure
 
@@ -79,7 +79,7 @@ npm run dev
 ## Requirements
 
 - Docker & Docker Compose
-- NVIDIA GPU with CUDA support (tested on RTX 3090)
+- NVIDIA GPU with CUDA support (tested on RTX 5090)
 - nvidia-docker runtime
 - ~8-12GB VRAM for model
 
