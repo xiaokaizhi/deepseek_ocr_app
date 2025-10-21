@@ -9,8 +9,19 @@ export default function ResultPanel({ result, loading, imagePreview, onCopy, onD
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  // Check if text looks like markdown
-  const isMarkdown = result?.text && (
+  // Check if text looks like HTML (model outputs HTML, not markdown)
+  const isHTML = result?.text && (
+    result.text.includes('<table') || 
+    result.text.includes('<tr>') || 
+    result.text.includes('<td>') ||
+    result.text.includes('<div') ||
+    result.text.includes('<p>') ||
+    result.text.includes('<h1') ||
+    result.text.includes('<h2')
+  )
+
+  // Also check if it looks like markdown (for backwards compatibility)
+  const isMarkdown = result?.text && !isHTML && (
     result.text.includes('##') || 
     result.text.includes('**') || 
     result.text.includes('```') ||
@@ -216,7 +227,15 @@ export default function ResultPanel({ result, loading, imagePreview, onCopy, onD
 
             {/* Text result */}
             <div className="bg-white/5 border border-white/10 rounded-xl p-4 max-h-96 overflow-y-auto">
-              {isMarkdown ? (
+              {isHTML ? (
+                <div 
+                  className="prose prose-invert prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: result.text }}
+                  style={{
+                    color: '#e5e7eb',
+                  }}
+                />
+              ) : isMarkdown ? (
                 <div className="prose prose-invert prose-sm max-w-none">
                   <ReactMarkdown>{result.text}</ReactMarkdown>
                 </div>
@@ -227,10 +246,39 @@ export default function ResultPanel({ result, loading, imagePreview, onCopy, onD
               )}
             </div>
 
+            {/* Raw Response Viewer */}
+            {result.raw_text && (
+              <details className="glass rounded-xl overflow-hidden">
+                <summary className="px-4 py-3 cursor-pointer flex items-center justify-between hover:bg-white/5 transition-colors">
+                  <span className="text-sm font-medium text-gray-300">🔍 Raw Model Response</span>
+                  <ChevronDown className="w-4 h-4 text-gray-400" />
+                </summary>
+                <div className="px-4 py-3 border-t border-white/10 space-y-2">
+                  <p className="text-xs text-gray-400 mb-2">Unprocessed output from the model (useful for debugging)</p>
+                  <div className="bg-black/30 rounded-lg p-3 max-h-64 overflow-y-auto">
+                    <pre className="text-xs text-green-400 font-mono whitespace-pre-wrap break-words select-all">
+                      {result.raw_text}
+                    </pre>
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(result.raw_text)}
+                      className="text-xs px-3 py-1 bg-white/5 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      Copy Raw
+                    </button>
+                    <span className="text-xs text-gray-500 py-1">
+                      {result.raw_text.length} characters
+                    </span>
+                  </div>
+                </div>
+              </details>
+            )}
+
             {/* Advanced Settings Dropdown */}
             <details className="glass rounded-xl overflow-hidden">
               <summary className="px-4 py-3 cursor-pointer flex items-center justify-between hover:bg-white/5 transition-colors">
-                <span className="text-sm font-medium text-gray-300">Advanced Settings & Metadata</span>
+                <span className="text-sm font-medium text-gray-300">⚙️ Metadata & Debug Info</span>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </summary>
               <div className="px-4 py-3 border-t border-white/10 space-y-3">
@@ -244,14 +292,21 @@ export default function ResultPanel({ result, loading, imagePreview, onCopy, onD
                 )}
                 {result.boxes?.length > 0 && (
                   <div>
-                    <p className="text-xs text-gray-400 mb-2">Detected Regions ({result.boxes.length})</p>
-                    <div className="space-y-1">
+                    <p className="text-xs text-gray-400 mb-2">Parsed Bounding Boxes ({result.boxes.length})</p>
+                    <div className="bg-black/30 rounded-lg p-2 space-y-1 max-h-32 overflow-y-auto">
                       {result.boxes.map((box, idx) => (
-                        <div key={idx} className="text-xs text-gray-500">
-                          {box.label}: [{box.box.map(n => Math.round(n)).join(', ')}]
+                        <div key={idx} className="text-xs font-mono">
+                          <span className="text-cyan-400">Box {idx + 1}:</span>{' '}
+                          <span className="text-purple-400">{box.label}</span>{' '}
+                          <span className="text-gray-500">
+                            [{box.box.map(n => Math.round(n)).join(', ')}]
+                          </span>
                         </div>
                       ))}
                     </div>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Coordinates are scaled from model output (0-999) to image pixels
+                    </p>
                   </div>
                 )}
               </div>

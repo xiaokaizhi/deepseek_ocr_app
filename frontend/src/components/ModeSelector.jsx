@@ -14,7 +14,7 @@ export default function ModeSelector({
   prompt, 
   onPromptChange,
   findTerm,
-  onFindTermChange 
+  onFindTermChange
 }) {
   const selectedMode = modes.find(m => m.id === mode)
   const needsInput = selectedMode?.needsInput

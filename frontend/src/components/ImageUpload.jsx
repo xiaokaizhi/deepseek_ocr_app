@@ -71,27 +71,28 @@ export default function ImageUpload({ onImageSelect, preview }) {
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative group"
+          className="relative group rounded-2xl overflow-hidden"
         >
           <img 
             src={preview} 
             alt="Preview" 
             className="w-full rounded-2xl border border-white/10"
           />
-          <motion.button
-            onClick={() => onImageSelect(null)}
-            className="absolute top-3 right-3 bg-red-500/80 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <X className="w-4 h-4" />
-          </motion.button>
-          
-          {/* Grounding overlay canvas */}
-          <canvas 
-            id="preview-canvas" 
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          />
+          <div className="absolute top-3 right-3 flex gap-2">
+            <motion.button
+              onClick={(e) => {
+                e.stopPropagation()
+                onImageSelect(null)
+              }}
+              className="bg-red-500/90 backdrop-blur-sm px-3 py-2 rounded-full opacity-100 hover:bg-red-600 transition-colors flex items-center gap-2 shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Remove image"
+            >
+              <X className="w-4 h-4" />
+              <span className="text-sm font-medium">Remove</span>
+            </motion.button>
+          </div>
         </motion.div>
       )}
     </div>

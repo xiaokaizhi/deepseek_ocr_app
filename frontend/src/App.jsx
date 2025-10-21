@@ -27,11 +27,22 @@ function App() {
   })
 
   const handleImageSelect = useCallback((file) => {
-    setImage(file)
-    setImagePreview(URL.createObjectURL(file))
-    setError(null)
-    setResult(null)
-  }, [])
+    if (file === null) {
+      // Clear everything when removing image
+      setImage(null)
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview)
+      }
+      setImagePreview(null)
+      setError(null)
+      setResult(null)
+    } else {
+      setImage(file)
+      setImagePreview(URL.createObjectURL(file))
+      setError(null)
+      setResult(null)
+    }
+  }, [imagePreview])
 
   const handleSubmit = async () => {
     if (!image) {
@@ -47,7 +58,8 @@ function App() {
       formData.append('image', image)
       formData.append('mode', mode)
       formData.append('prompt', prompt)
-      formData.append('grounding', mode === 'find_ref') // Auto-enable for find mode
+      // Enable grounding only for find mode
+      formData.append('grounding', mode === 'find_ref')
       formData.append('include_caption', false)
       formData.append('find_term', findTerm)
       formData.append('schema', '')
@@ -81,12 +93,9 @@ function App() {
     
     const extensions = {
       plain_ocr: 'txt',
-      markdown: 'md',
-      tables_csv: 'csv',
-      tables_md: 'md',
-      kv_json: 'json',
-      layout_map: 'json',
-      pii_redact: 'json',
+      describe: 'txt',
+      find_ref: 'txt',
+      freeform: 'txt',
     }
     
     const ext = extensions[mode] || 'txt'
