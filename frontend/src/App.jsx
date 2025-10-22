@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Zap, Loader2 } from 'lucide-react'
+import { Sparkles, Zap, Loader2, Settings } from 'lucide-react'
 import ImageUpload from './components/ImageUpload'
 import ModeSelector from './components/ModeSelector'
 import ResultPanel from './components/ResultPanel'
+import AdvancedSettings from './components/AdvancedSettings'
 import axios from 'axios'
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api'
@@ -15,6 +16,8 @@ function App() {
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [showAdvanced, setShowAdvanced] = useState(false)
+  const [includeCaption, setIncludeCaption] = useState(false)
   
   // Form state
   const [prompt, setPrompt] = useState('')
@@ -60,7 +63,7 @@ function App() {
       formData.append('prompt', prompt)
       // Enable grounding only for find mode
       formData.append('grounding', mode === 'find_ref')
-      formData.append('include_caption', false)
+      formData.append('include_caption', includeCaption)
       formData.append('find_term', findTerm)
       formData.append('schema', '')
       formData.append('base_size', advancedSettings.base_size)
@@ -189,6 +192,39 @@ function App() {
               onImageSelect={handleImageSelect}
               preview={imagePreview}
             />
+
+            {/* Advanced Settings Toggle */}
+            <motion.button
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="w-full glass px-4 py-3 rounded-2xl flex items-center justify-between hover:bg-white/5 transition-colors"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+            >
+              <div className="flex items-center gap-2">
+                <Settings className="w-4 h-4 text-purple-400" />
+                <span className="text-sm font-medium text-gray-300">Advanced Settings</span>
+              </div>
+              <motion.div
+                animate={{ rotate: showAdvanced ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </motion.div>
+            </motion.button>
+
+            {/* Advanced Settings Panel */}
+            <AnimatePresence>
+              {showAdvanced && (
+                <AdvancedSettings
+                  settings={advancedSettings}
+                  onSettingsChange={setAdvancedSettings}
+                  includeCaption={includeCaption}
+                  onIncludeCaptionChange={setIncludeCaption}
+                />
+              )}
+            </AnimatePresence>
 
             {/* Action Button */}
             <motion.button

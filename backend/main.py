@@ -102,7 +102,7 @@ def build_prompt(
 
     instruction = ""
     if mode == "plain_ocr":
-        instruction = "Free OCR. Only output the raw text."
+        instruction = "Free OCR."
     elif mode == "markdown":
         instruction = "Convert the document to markdown."
     elif mode == "tables_csv":
