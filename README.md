@@ -325,3 +325,8 @@ docker-compose build frontend
 ## License
 
 This project uses the DeepSeek-OCR model. Refer to the model's license terms.
+
+
+<!-- Small note and direct link to license at the bottom -->
+<!-- MIT License: this repository is licensed under the MIT License. See the full text in the LICENSE file. -->
+Note: Licensed under the MIT License. View the full license: [LICENSE](./LICENSE)
