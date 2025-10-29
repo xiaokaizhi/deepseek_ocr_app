@@ -1,3 +1,5 @@
+# 参考：https://stable-learn.com/zh/deepseek-ocr-app-introduction/
+
 # 🚀 DeepSeek OCR - React + FastAPI
 
 Modern OCR web application powered by DeepSeek-OCR with a stunning React frontend and FastAPI backend.
